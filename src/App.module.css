@@ -1,0 +1,15 @@
+.fadeIn {
+    animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        position: relative;
+        transform: translateY(150px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
