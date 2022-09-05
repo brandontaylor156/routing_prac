@@ -7,23 +7,31 @@ import style from './App.module.css'
 const App = () => {
 
   const [category, setCategory] = React.useState("people");
+  const [tempCategory, setTempCategory] = React.useState("people");
+
   const [id, setId] = React.useState(1);
+  const [tempId, setTempId] = React.useState(1);
+
   const [result, setResult] = React.useState({})
-  const [submitted, setSubmitted] = React.useState(false)
+  const [errorMsg, setErrorMsg] = React.useState(null);
 
   const navigate = useNavigate();
 
   React.useEffect(()=> {
     axios.get(`https://swapi.dev/api/${category}/${id}`)
-      .then(response=>{setResult(response.data)})
-  }, [category, id])
+      .then(response=>{
+        setResult(response.data);
+        setErrorMsg(null);
+      })
+      .catch(error=> setErrorMsg("Can't find that shi bruh."))
 
-  console.log(result);
+  }, [category, id])
 
   const handleSubmit = (e) => {
       e.preventDefault();
-      navigate(`/${category}/${id}`);
-      setSubmitted(true);
+      setCategory(tempCategory);
+      setId(tempId)
+      navigate(`/${tempCategory}/${tempId}`);
   }
   
   return (
@@ -33,11 +41,10 @@ const App = () => {
               <label>Search For:</label>
               <select
                   onChange={(e) => {
-                    setCategory(e.target.value);
-                    setSubmitted(false);
+                    setTempCategory(e.target.value);
                     }
                   }
-                  value={category}
+                  value={tempCategory}
                   >
                   <option value="people">People</option>
                   <option value="planets">Planets</option>
@@ -48,20 +55,26 @@ const App = () => {
               <label>ID:</label>
               <input
                   type="number"
+                  min="1"
                   onChange={(e) => {
-                    setId(e.target.value);
-                    setSubmitted(false);
+                    setTempId(e.target.value);
                     }
                   }
-                  value={id}
+                  value={tempId}
                   />
           </div>
           <div>
               <button>Search</button>
           </div>
       </form>
+      {errorMsg &&
+        <div className={style.fadeIn}>
+          <img src="https://www.smarttechbuzz.org/wp-content/uploads/2020/11/confused-2.jpg" alt="confused"/>
+        </div>
+      }
+
       {
-      category==="people" && submitted &&
+      category==="people" && !errorMsg &&
         <>
           <div>Name: {result.name}</div>
           <div>Gender: {result.gender}</div>
@@ -70,7 +83,7 @@ const App = () => {
         </>
       }
       {
-      category==="planets" && submitted &&
+      category==="planets" && !errorMsg &&
         <>
           <div>Name: {result.name}</div>
           <div>Climate: {result.climate}</div>
@@ -79,7 +92,7 @@ const App = () => {
         </>
       }
       {
-      category==="species" && submitted &&
+      category==="species" && !errorMsg &&
         <>
           <div>Name: {result.name}</div>
           <div>Classification: {result.classification}</div>
