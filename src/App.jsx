@@ -30,15 +30,15 @@ const App = () => {
         setIsPending(false);
       })
 
-
-  }, [category, id])
+      
+  }, [category, id, isPending])
 
   const handleSubmit = (e) => {
       e.preventDefault();
-      setIsPending(true)
+      setIsPending(true);
       navigate(`/${tempCategory}/${tempId}`);
       setCategory(tempCategory);
-      setId(tempId)
+      setId(tempId);
   }
   
   return (
