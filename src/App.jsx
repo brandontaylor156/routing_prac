@@ -1,72 +1,94 @@
 import React from 'react';
+import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
-import axios from 'axios'
+
 import style from './App.module.css'
 
-
 const App = () => {
+
   const [category, setCategory] = React.useState("people");
   const [id, setId] = React.useState(1);
-  const [name, setName] = React.useState("");
-  const [submitted, setSubmitted] = React.useState(false);
+  const [result, setResult] = React.useState({})
+  const [submitted, setSubmitted] = React.useState(false)
 
   const navigate = useNavigate();
-  
+
   React.useEffect(()=> {
     axios.get(`https://swapi.dev/api/${category}/${id}`)
-      .then(response=>{setName(response.data.name)})
+      .then(response=>{setResult(response.data)})
   }, [category, id])
-  
+
+  console.log(result);
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    navigate(`/${category}/${id}`);
+      e.preventDefault();
+      navigate(`/${category}/${id}`);
+      setSubmitted(true);
   }
-
+  
   return (
-    <div className={style.flex}>
-      <div>
-        <form onSubmit={handleSubmit}>
-
-          <label>Search for:</label>
-          <select 
-            name="category" 
-            onChange={(e)=> {
-              setCategory(e.target.value);
-              setSubmitted(false);
-            }}
-            value={category}
-            >
-            <option value="people">People</option>
-            <option value="planets">Planets</option>
-          </select>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;
-
-          <label>ID:</label>
-          <input 
-            type="number" 
-            min="1" 
-            onChange={(e) => { 
-              setId(e.target.value);
-              setSubmitted(false);
-            }} 
-            value={id}
-            />     
-          <button>Search</button>
-        </form>
-      </div>
-
+    <div className={style.flex1}>
+      <form onSubmit={handleSubmit} className={style.flex2}>
+          <div>
+              <label>Search For:</label>
+              <select
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setSubmitted(false);
+                    }
+                  }
+                  value={category}
+                  >
+                  <option value="people">People</option>
+                  <option value="planets">Planets</option>
+                  <option value="species">Species</option>
+              </select>
+          </div>
+          <div>
+              <label>ID:</label>
+              <input
+                  type="number"
+                  onChange={(e) => {
+                    setId(e.target.value);
+                    setSubmitted(false);
+                    }
+                  }
+                  value={id}
+                  />
+          </div>
+          <div>
+              <button>Search</button>
+          </div>
+      </form>
       {
-      submitted && 
-      <div>
-        <p>Name: {name}</p>
-      </div>
+      category==="people" && submitted &&
+        <>
+          <div>Name: {result.name}</div>
+          <div>Gender: {result.gender}</div>
+          <div>Skin Color: {result.skin_color}</div>
+          <div>Hair Color: {result.hair_color}</div>
+        </>
       }
-      
+      {
+      category==="planets" && submitted &&
+        <>
+          <div>Name: {result.name}</div>
+          <div>Climate: {result.climate}</div>
+          <div>Diameter: {result.diameter}</div>
+          <div>Terrain: {result.terrain}</div>
+        </>
+      }
+      {
+      category==="species" && submitted &&
+        <>
+          <div>Name: {result.name}</div>
+          <div>Classification: {result.classification}</div>
+          <div>Designation: {result.designation}</div>
+          <div>Language: {result.language}</div>
+        </>
+      }
     </div>
-
-  );
+  )
 }
 
 
