@@ -14,6 +14,7 @@ const App = () => {
 
   const [result, setResult] = React.useState({})
   const [errorMsg, setErrorMsg] = React.useState(null);
+  const [isPending, setIsPending] = React.useState(true);
 
   const navigate = useNavigate();
 
@@ -22,16 +23,22 @@ const App = () => {
       .then(response=>{
         setResult(response.data);
         setErrorMsg(null);
+        setIsPending(false);
       })
-      .catch(error=> setErrorMsg("Can't find that shi bruh."))
+      .catch(error=> {
+        setErrorMsg("Can't find that shi bruh.")
+        setIsPending(false);
+      })
+
 
   }, [category, id])
 
   const handleSubmit = (e) => {
       e.preventDefault();
+      setIsPending(true)
+      navigate(`/${tempCategory}/${tempId}`);
       setCategory(tempCategory);
       setId(tempId)
-      navigate(`/${tempCategory}/${tempId}`);
   }
   
   return (
@@ -67,14 +74,19 @@ const App = () => {
               <button>Search</button>
           </div>
       </form>
+
       {errorMsg &&
         <div className={style.fadeIn}>
           <img src="https://www.smarttechbuzz.org/wp-content/uploads/2020/11/confused-2.jpg" alt="confused"/>
         </div>
       }
 
+      {isPending &&
+        <img src="https://i.gifer.com/origin/3f/3face8da2a6c3dcd27cb4a1aaa32c926_w200.gif" alt="loading" style={{width: '100px', height: '100px'}}/>
+      }
+
       {
-      category==="people" && !errorMsg &&
+      category==="people" && !errorMsg && !isPending &&
         <>
           <div>Name: {result.name}</div>
           <div>Gender: {result.gender}</div>
@@ -83,7 +95,7 @@ const App = () => {
         </>
       }
       {
-      category==="planets" && !errorMsg &&
+      category==="planets" && !errorMsg && !isPending &&
         <>
           <div>Name: {result.name}</div>
           <div>Climate: {result.climate}</div>
@@ -92,7 +104,7 @@ const App = () => {
         </>
       }
       {
-      category==="species" && !errorMsg &&
+      category==="species" && !errorMsg && !isPending &&
         <>
           <div>Name: {result.name}</div>
           <div>Classification: {result.classification}</div>
