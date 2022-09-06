@@ -77,7 +77,7 @@ const App = () => {
           />
   
           <div>
-              <Button variant="contained" color="secondary" size="large" type="submit" endIcon={<SearchIcon />}>Search</Button>
+              <Button variant="contained" color="error" size="large" type="submit" endIcon={<SearchIcon />}>Search</Button>
           </div>
       </form>
 
