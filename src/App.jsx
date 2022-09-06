@@ -2,6 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom'
 
+import {Button} from "@mui/material"
+import SearchIcon from '@mui/icons-material/Search';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import style from './App.module.css'
 
 const App = () => {
@@ -44,34 +53,31 @@ const App = () => {
   return (
     <div className={style.flex1}>
       <form onSubmit={handleSubmit} className={style.flex2}>
+          <FormControl fullWidth>
+            <InputLabel id="category">Category</InputLabel>
+            <Select
+              value={tempCategory}
+              label="Category"
+              onChange={(e) => setTempCategory(e.target.value)}
+            >
+              <MenuItem value="people">People</MenuItem>
+              <MenuItem value="planets">Planets</MenuItem>
+              <MenuItem value="species">Species</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="ID"
+            type="number"
+            min="1"
+            value={tempId}
+            onChange={(e) => setTempId(e.target.value)}
+            InputLabelProps={{
+            shrink: true,
+          }}
+          />
+  
           <div>
-              <label>Search For:</label>
-              <select
-                  onChange={(e) => {
-                    setTempCategory(e.target.value);
-                    }
-                  }
-                  value={tempCategory}
-                  >
-                  <option value="people">People</option>
-                  <option value="planets">Planets</option>
-                  <option value="species">Species</option>
-              </select>
-          </div>
-          <div>
-              <label>ID:</label>
-              <input
-                  type="number"
-                  min="1"
-                  onChange={(e) => {
-                    setTempId(e.target.value);
-                    }
-                  }
-                  value={tempId}
-                  />
-          </div>
-          <div>
-              <button>Search</button>
+              <Button variant="contained" color="secondary" size="large" type="submit" endIcon={<SearchIcon />}>Search</Button>
           </div>
       </form>
 
@@ -82,35 +88,35 @@ const App = () => {
       }
 
       {isPending &&
-        <img src="https://i.gifer.com/origin/3f/3face8da2a6c3dcd27cb4a1aaa32c926_w200.gif" alt="loading" style={{width: '100px', height: '100px'}}/>
+        <CircularProgress style={{marginTop: '20px'}}/>
       }
 
       {
       category==="people" && !errorMsg && !isPending &&
-        <>
+        <div style={{marginTop: '20px'}}>
           <div>Name: {result.name}</div>
           <div>Gender: {result.gender}</div>
           <div>Skin Color: {result.skin_color}</div>
           <div>Hair Color: {result.hair_color}</div>
-        </>
+        </div>
       }
       {
       category==="planets" && !errorMsg && !isPending &&
-        <>
+        <div style={{marginTop: '20px'}}>
           <div>Name: {result.name}</div>
           <div>Climate: {result.climate}</div>
           <div>Diameter: {result.diameter}</div>
           <div>Terrain: {result.terrain}</div>
-        </>
+        </div>
       }
       {
       category==="species" && !errorMsg && !isPending &&
-        <>
+        <div style={{marginTop: '20px'}}>
           <div>Name: {result.name}</div>
           <div>Classification: {result.classification}</div>
           <div>Designation: {result.designation}</div>
           <div>Language: {result.language}</div>
-        </>
+        </div>
       }
     </div>
   )
